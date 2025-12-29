@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/NavBar";
 import {
@@ -48,11 +48,29 @@ export default function Dashboard() {
 
   const [selectedClass, setSelectedClass] = useState("ALL");
   const [selectedBatch, setSelectedBatch] = useState("ALL");
+  const [availableBatches, setAvailableBatches] = useState([]);
 
+  /* ===================== FILTER PARAMS ===================== */
   const params = {
     class_number: selectedClass !== "ALL" ? selectedClass : undefined,
     batch: selectedBatch !== "ALL" ? selectedBatch : undefined,
   };
+
+  /* ===================== FETCH BATCHES (FIXED) ===================== */
+  useEffect(() => {
+    if (selectedClass === "ALL") {
+      setAvailableBatches([]);
+      setSelectedBatch("ALL");
+      return;
+    }
+
+    axios
+      .get(`${API_BASE}/filters/batches`, {
+        params: { class_number: selectedClass },
+      })
+      .then((res) => setAvailableBatches(res.data.data))
+      .catch(console.error);
+  }, [selectedClass]);
 
   /* ===================== FETCH DATA ===================== */
   useEffect(() => {
@@ -62,17 +80,39 @@ export default function Dashboard() {
     axios.get(`${API_BASE}/charts/term-comparison`, { params }).then(r => setTermComparison(r.data.data));
     axios.get(`${API_BASE}/charts/report-subject-avg`, { params }).then(r => setReportSubjectAvg(r.data.data));
     axios.get(`${API_BASE}/charts/report-term-avg`, { params }).then(r => setReportTermAvg(r.data.data));
-
     axios.get(`${API_BASE}/table/top-students-overall`, { params }).then(r => setTopOverall(r.data.data));
     axios.get(`${API_BASE}/table/top-students-subject`, { params }).then(r => setTopSubject(r.data.data));
     axios.get(`${API_BASE}/table/leaderboard`, { params }).then(r => setLeaderboard(r.data.data));
   }, [selectedClass, selectedBatch]);
 
-  /* ===================== CHART HELPER ===================== */
-  const makeChart = (labels, data, label) => ({
+  /* ===================== COLORS ===================== */
+  const colors = [
+    "#4f46e5", "#16a34a", "#dc2626",
+    "#0ea5e9", "#9333ea", "#ce4b00ff",
+  ];
+
+  /* ===================== SIMPLE BAR ===================== */
+  const simpleChart = (labels, data, label, color) => ({
     labels,
-    datasets: [{ label, data, backgroundColor: "#4f46e5" }],
+    datasets: [{ label, data, backgroundColor: color }],
   });
+
+  /* ===================== GROUPED TERM COMPARISON ===================== */
+  const groupedTermChart = useMemo(() => {
+    const subjects = [...new Set(termComparison.map(d => d.subject))];
+    const terms = [...new Set(termComparison.map(d => d.term))];
+
+    return {
+      labels: subjects,
+      datasets: terms.map((term, i) => ({
+        label: term,
+        backgroundColor: colors[i % colors.length],
+        data: subjects.map(sub =>
+          termComparison.find(d => d.subject === sub && d.term === term)?.avg_score || 0
+        ),
+      })),
+    };
+  }, [termComparison]);
 
   /* ===================== UI ===================== */
   return (
@@ -81,7 +121,7 @@ export default function Dashboard() {
       <div style={styles.page}>
         <h2>📊 Student Dashboard</h2>
 
-        {/* Filters */}
+        {/* FILTERS */}
         <div style={styles.filters}>
           <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)}>
             <option value="ALL">All Classes</option>
@@ -89,10 +129,15 @@ export default function Dashboard() {
             <option value="2">2</option>
           </select>
 
-          <select value={selectedBatch} onChange={e => setSelectedBatch(e.target.value)}>
+          <select
+            value={selectedBatch}
+            onChange={e => setSelectedBatch(e.target.value)}
+            disabled={selectedClass === "ALL"}
+          >
             <option value="ALL">All Batches</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
+            {availableBatches.map(b => (
+              <option key={b} value={b}>{b}</option>
+            ))}
           </select>
         </div>
 
@@ -100,19 +145,21 @@ export default function Dashboard() {
         <div style={styles.row}>
           <div style={styles.card}>
             <h4>Performance Distribution</h4>
-            <Bar data={makeChart(
+            <Bar data={simpleChart(
               performance.map(d => d.subject),
               performance.map(d => d.avg_score),
-              "Students"
+              "Students",
+              colors[5]
             )} />
           </div>
 
           <div style={styles.card}>
             <h4>Pass vs Fail</h4>
-            <Bar data={makeChart(
+            <Bar data={simpleChart(
               passFail.map(d => `${d.subject}-${d.term}`),
               passFail.map(d => d.avg_score),
-              "Count"
+              "Count",
+              colors[1]
             )} />
           </div>
 
@@ -120,11 +167,11 @@ export default function Dashboard() {
             <h4>Top Students (Overall)</h4>
             <table width="100%" border="1">
               <thead>
-                <tr><th>Rank</th><th>Name</th><th>Avg %</th></tr>
+                <tr><th>Rank</th><th>Name</th><th>%</th></tr>
               </thead>
               <tbody>
                 {topOverall.map(s => (
-                  <tr key={s.admission_no}>
+                  <tr key={s.rank}>
                     <td>{s.rank}</td>
                     <td>{s.student_name}</td>
                     <td>{s.avg_marks}</td>
@@ -139,27 +186,24 @@ export default function Dashboard() {
         <div style={styles.row}>
           <div style={styles.card}>
             <h4>Subject Average</h4>
-            <Bar data={makeChart(
+            <Bar data={simpleChart(
               subjectAvg.map(d => d.subject),
               subjectAvg.map(d => d.avg_score),
-              "Avg %"
+              "Avg %",
+              colors[0]
             )} />
           </div>
 
           <div style={styles.card}>
-            <h4>Term Comparison</h4>
-            <Bar data={makeChart(
-              termComparison.map(d => `${d.subject}-${d.term}`),
-              termComparison.map(d => d.avg_score),
-              "Avg %"
-            )} />
+            <h4>Term Comparison (Grouped)</h4>
+            <Bar data={groupedTermChart} />
           </div>
 
           <div style={styles.card}>
             <h4>Top Students (Subject)</h4>
             <table width="100%" border="1">
               <thead>
-                <tr><th>Rank</th><th>Subject</th><th>Name</th><th>%</th></tr>
+                <tr><th>Rank</th><th>Subject</th><th>Name</th><th>Total</th><th>Average</th><th>Class</th><th>Batch</th></tr>
               </thead>
               <tbody>
                 {topSubject.map(s => (
@@ -167,7 +211,10 @@ export default function Dashboard() {
                     <td>{s.rank}</td>
                     <td>{s.subject}</td>
                     <td>{s.student_name}</td>
-                    <td>{s.percentage}</td>
+                    <td>{s.total_marks}</td>
+                    <td>{s.avg_score}</td>
+                    <td>{s.class_number}</td>
+                    <td>{s.batch}</td>
                   </tr>
                 ))}
               </tbody>
@@ -179,19 +226,21 @@ export default function Dashboard() {
         <div style={styles.row}>
           <div style={styles.card}>
             <h4>Report Subject Average</h4>
-            <Bar data={makeChart(
+            <Bar data={simpleChart(
               reportSubjectAvg.map(d => d.subject),
               reportSubjectAvg.map(d => d.avg_score),
-              "Avg %"
+              "Avg %",
+              colors[3]
             )} />
           </div>
 
           <div style={styles.card}>
             <h4>Report Term Average</h4>
-            <Bar data={makeChart(
+            <Bar data={simpleChart(
               reportTermAvg.map(d => d.term),
               reportTermAvg.map(d => d.avg_score),
-              "Avg %"
+              "Avg %",
+              colors[4]
             )} />
           </div>
 
@@ -199,13 +248,15 @@ export default function Dashboard() {
             <h4>Leaderboard</h4>
             <table width="100%" border="1">
               <thead>
-                <tr><th>Rank</th><th>Name</th><th>%</th></tr>
+                <tr><th>Rank</th><th>Name</th><th>Class</th><th>Division</th><th>%</th></tr>
               </thead>
               <tbody>
-                {leaderboard.slice(0, 5).map(s => (
+                {leaderboard.map(s => (
                   <tr key={s.rank}>
                     <td>{s.rank}</td>
                     <td>{s.student_name}</td>
+                    <td>{s.class_number}</td>
+                    <td>{s.batch}</td>
                     <td>{s.percentage}</td>
                   </tr>
                 ))}
