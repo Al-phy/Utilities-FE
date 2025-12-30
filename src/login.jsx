@@ -54,39 +54,45 @@ function Login() {
       marginTop: "20px",
       textAlign: "center",
       fontWeight: "600",
-      color: "red",
+      color: "green",
     },
   };
  
  
   async function handleLogin(e) {
-    e.preventDefault();
- 
-    try {
-      const response = await API.post("/users/login", {
-        email,
-        password
-      });
-     
-      // setMessage(response.data.message);
- 
-      if(response.data.success) {
-        const user = response.data.user;
- 
-        // ✅ Store user info in localStorage
-        localStorage.setItem("userId", user.id);
-        localStorage.setItem("isLoggedIn", "true");
- 
-        navigate("/dashboard")
-      } else {
-        setMessage(response.data.message);
-      }
- 
-    } catch (error) {
-      console.error(error);
-      setMessage("Failed to login");
+  e.preventDefault();
+
+  try {
+    const response = await API.post("/users/login", {
+      email,
+      password
+    });
+
+    if (response.data.success) {
+      const user = response.data.user;
+
+      // store login info
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("isLoggedIn", "true");
+
+      // ✅ show success message
+      setMessage("Login successful!");
+
+      // ✅ navigate after 1 second
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+
+    } else {
+      setMessage(response.data.message);
     }
+
+  } catch (error) {
+    console.error(error);
+    setMessage("Failed to login");
   }
+}
+
  
   return (
     <div style={styles.container}>

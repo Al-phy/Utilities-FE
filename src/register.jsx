@@ -53,7 +53,7 @@ function Register() {
       marginTop: "20px",
       textAlign: "center",
       fontWeight: "600",
-      color: "red",
+      color: "green",
     },
   };
  

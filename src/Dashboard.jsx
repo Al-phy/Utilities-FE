@@ -88,7 +88,7 @@ export default function Dashboard() {
   /* ===================== COLORS ===================== */
   const colors = [
     "#4f46e5", "#16a34a", "#dc2626",
-    "#0ea5e9", "#9333ea", "#ce4b00ff",
+    "#0ea5e9", "#9333ea", "#ff8f4fff",
   ];
 
   /* ===================== SIMPLE BAR ===================== */
@@ -99,20 +99,45 @@ export default function Dashboard() {
 
   /* ===================== GROUPED TERM COMPARISON ===================== */
   const groupedTermChart = useMemo(() => {
-    const subjects = [...new Set(termComparison.map(d => d.subject))];
-    const terms = [...new Set(termComparison.map(d => d.term))];
+  const subjects = [...new Set(termComparison.map(d => d.subject))];
+  const terms = [...new Set(termComparison.map(d => d.term))];
 
-    return {
-      labels: subjects,
-      datasets: terms.map((term, i) => ({
-        label: term,
-        backgroundColor: colors[i % colors.length],
-        data: subjects.map(sub =>
-          termComparison.find(d => d.subject === sub && d.term === term)?.avg_score || 0
-        ),
-      })),
-    };
-  }, [termComparison]);
+  const termColors = {
+    "Term 1": "#22c55e", // green
+    "Term 2": "#f3c848ff", // yellow
+  };
+
+  return {
+    labels: subjects,
+    datasets: terms.map(term => ({
+      label: term,
+      backgroundColor: termColors[term] || "#9ca3af",
+      data: subjects.map(sub =>
+        termComparison.find(
+          d => d.subject === sub && d.term === term
+        )?.avg_score || 0
+      ),
+    })),
+  };
+}, [termComparison]);
+
+  /* ===================== GROUPED PASS FAIL ===================== */
+  const groupedPassFailChart = useMemo(() => {
+  const subjects = [...new Set(passFail.map(d => d.subject))];
+  const types = ["Pass", "Fail"];
+
+  return {
+    labels: subjects,
+    datasets: types.map((type, i) => ({
+      label: type,
+      backgroundColor: type === "Pass" ? "#7c3aed" : "#ef4444", // purple & red
+      data: subjects.map(sub =>
+        passFail.find(d => d.subject === sub && d.term === type)?.avg_score || 0
+      ),
+    })),
+  };
+}, [passFail]);
+
 
   /* ===================== UI ===================== */
   return (
@@ -154,14 +179,9 @@ export default function Dashboard() {
           </div>
 
           <div style={styles.card}>
-            <h4>Pass vs Fail</h4>
-            <Bar data={simpleChart(
-              passFail.map(d => `${d.subject}-${d.term}`),
-              passFail.map(d => d.avg_score),
-              "Count",
-              colors[1]
-            )} />
-          </div>
+  <h4>Pass vs Fail (Grouped)</h4>
+  <Bar data={groupedPassFailChart} />
+</div>
 
           <div style={styles.card}>
             <h4>Top Students (Overall)</h4>
