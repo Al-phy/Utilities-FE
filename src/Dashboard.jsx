@@ -99,44 +99,44 @@ export default function Dashboard() {
 
   /* ===================== GROUPED TERM COMPARISON ===================== */
   const groupedTermChart = useMemo(() => {
-  const subjects = [...new Set(termComparison.map(d => d.subject))];
-  const terms = [...new Set(termComparison.map(d => d.term))];
+    const subjects = [...new Set(termComparison.map(d => d.subject))];
+    const terms = [...new Set(termComparison.map(d => d.term))];
 
-  const termColors = {
-    "Term 1": "#22c55e", // green
-    "Term 2": "#f3c848ff", // yellow
-  };
+    const termColors = {
+      "Term 1": "#22c55e", // green
+      "Term 2": "#f3c848ff", // yellow
+    };
 
-  return {
-    labels: subjects,
-    datasets: terms.map(term => ({
-      label: term,
-      backgroundColor: termColors[term] || "#9ca3af",
-      data: subjects.map(sub =>
-        termComparison.find(
-          d => d.subject === sub && d.term === term
-        )?.avg_score || 0
-      ),
-    })),
-  };
-}, [termComparison]);
+    return {
+      labels: subjects,
+      datasets: terms.map(term => ({
+        label: term,
+        backgroundColor: termColors[term] || "#9ca3af",
+        data: subjects.map(sub =>
+          termComparison.find(
+            d => d.subject === sub && d.term === term
+          )?.avg_score || 0
+        ),
+      })),
+    };
+  }, [termComparison]);
 
   /* ===================== GROUPED PASS FAIL ===================== */
   const groupedPassFailChart = useMemo(() => {
-  const subjects = [...new Set(passFail.map(d => d.subject))];
-  const types = ["Pass", "Fail"];
+    const subjects = [...new Set(passFail.map(d => d.subject))];
+    const types = ["Pass", "Fail"];
 
-  return {
-    labels: subjects,
-    datasets: types.map((type, i) => ({
-      label: type,
-      backgroundColor: type === "Pass" ? "#7c3aed" : "#ef4444", // purple & red
-      data: subjects.map(sub =>
-        passFail.find(d => d.subject === sub && d.term === type)?.avg_score || 0
-      ),
-    })),
-  };
-}, [passFail]);
+    return {
+      labels: subjects,
+      datasets: types.map((type, i) => ({
+        label: type,
+        backgroundColor: type === "Pass" ? "#7c3aed" : "#ef4444", // purple & red
+        data: subjects.map(sub =>
+          passFail.find(d => d.subject === sub && d.term === type)?.avg_score || 0
+        ),
+      })),
+    };
+  }, [passFail]);
 
 
   /* ===================== UI ===================== */
@@ -179,9 +179,9 @@ export default function Dashboard() {
           </div>
 
           <div style={styles.card}>
-  <h4>Pass vs Fail (Grouped)</h4>
-  <Bar data={groupedPassFailChart} />
-</div>
+            <h4>Pass vs Fail (Grouped)</h4>
+            <Bar data={groupedPassFailChart} />
+          </div>
 
           <div style={styles.card}>
             <h4>Top Students (Overall)</h4>
@@ -220,21 +220,19 @@ export default function Dashboard() {
           </div>
 
           <div style={styles.card}>
-            <h4>Top Students (Subject)</h4>
+            <h4>Leaderboard</h4>
             <table width="100%" border="1">
               <thead>
-                <tr><th>Rank</th><th>Subject</th><th>Name</th><th>Total</th><th>Average</th><th>Class</th><th>Batch</th></tr>
+                <tr><th>Rank</th><th>Name</th><th>Class</th><th>Division</th><th>%</th></tr>
               </thead>
               <tbody>
-                {topSubject.map(s => (
+                {leaderboard.map(s => (
                   <tr key={s.rank}>
                     <td>{s.rank}</td>
-                    <td>{s.subject}</td>
                     <td>{s.student_name}</td>
-                    <td>{s.total_marks}</td>
-                    <td>{s.avg_score}</td>
                     <td>{s.class_number}</td>
                     <td>{s.batch}</td>
+                    <td>{s.percentage}</td>
                   </tr>
                 ))}
               </tbody>
@@ -265,19 +263,21 @@ export default function Dashboard() {
           </div>
 
           <div style={styles.card}>
-            <h4>Leaderboard</h4>
+            <h4>Top Students (Subject)</h4>
             <table width="100%" border="1">
               <thead>
-                <tr><th>Rank</th><th>Name</th><th>Class</th><th>Division</th><th>%</th></tr>
+                <tr><th>Rank</th><th>Subject</th><th>Name</th><th>Total</th><th>Average</th><th>Class</th><th>Batch</th></tr>
               </thead>
               <tbody>
-                {leaderboard.map(s => (
+                {topSubject.map(s => (
                   <tr key={s.rank}>
                     <td>{s.rank}</td>
+                    <td>{s.subject}</td>
                     <td>{s.student_name}</td>
+                    <td>{s.total_marks}</td>
+                    <td>{s.avg_score}</td>
                     <td>{s.class_number}</td>
                     <td>{s.batch}</td>
-                    <td>{s.percentage}</td>
                   </tr>
                 ))}
               </tbody>
