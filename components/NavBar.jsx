@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FiMenu } from "react-icons/fi";
+import "./Navbar.css";
 
-function Navbar() {
+export default function Navbar({ onToggle }) {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -14,103 +16,48 @@ function Navbar() {
   return (
     <>
       {/* NAVBAR */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "12px 20px",
-          backgroundColor: "#1f2937",
-          color: "white",
-        }}
-      >
-        <h3 style={{ margin: 0 }}>Analysis Report</h3>
-
-        <button
-          onClick={() => setShowConfirm(true)}
-          style={{
-            padding: "8px 14px",
-            backgroundColor: "#00b41eff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Logout
+      <header className="navbar">
+        {/* MENU BUTTON */}
+        <button className="menu-btn" onClick={onToggle}>
+          <FiMenu size={22} />
         </button>
-      </div>
+
+        {/* TITLE */}
+        <h3 className="navbar-title">Analysis Report</h3>
+
+        {/* ACTIONS */}
+        <div className="navbar-actions">
+          <button
+            className="nav-btn"
+            style={{ backgroundColor: "#690669", color: "white" }}
+            onClick={() => navigate("/attendance")}
+          >
+            Go to Attendance
+          </button>
+
+          <button
+            className="nav-btn"
+            style={{ backgroundColor: "#00b41e", color: "white" }}
+            onClick={() => setShowConfirm(true)}
+          >
+            Logout
+          </button>
+        </div>
+      </header>
 
       {/* CONFIRMATION MODAL */}
       {showConfirm && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "#ffffff",
-              padding: "25px",
-              borderRadius: "8px",
-              width: "320px",
-              textAlign: "center",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-            }}
-          >
-            <h3 style={{ marginBottom: "10px", color: "#111827" }}>
-              Confirm Logout
-            </h3>
-            <p style={{ marginBottom: "20px", color: "#374151" }}>
-              Are you sure you want to logout?
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "15px",
-                marginTop: "20px",
-              }}
-            >
-              <button
-                onClick={() => setShowConfirm(false)}
-                style={{
-                  padding: "8px 18px",
-                  backgroundColor: "#9ca3af",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
+        <div className="confirm-modal">
+          <div className="confirm-modal-content">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to logout?</p>
+            <div className="modal-buttons">
+              <button className="cancel" onClick={() => setShowConfirm(false)}>
                 Cancel
               </button>
-
-              <button
-                onClick={handleLogout}
-                style={{
-                  padding: "8px 18px",
-                  backgroundColor: "#dc2626",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
+              <button className="logout" onClick={handleLogout}>
                 Logout
               </button>
-
-
             </div>
           </div>
         </div>
@@ -118,5 +65,3 @@ function Navbar() {
     </>
   );
 }
-
-export default Navbar;

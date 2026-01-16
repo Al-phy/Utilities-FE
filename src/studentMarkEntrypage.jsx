@@ -24,9 +24,6 @@ export default function StudentListPage() {
     academic_year: "2024-25",
   });
 
-
-
-
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmType, setConfirmType] = useState(""); // "create" | "edit"
 

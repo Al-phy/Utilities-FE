@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import Navbar from "../components/NavBar";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +9,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+import MainLayout from "../layouts/MainLayout";
 
 const API_BASE = "http://localhost:4000";
 
@@ -142,7 +141,8 @@ export default function Dashboard() {
   /* ===================== UI ===================== */
   return (
     <>
-      <Navbar showLinks={false} />
+    <MainLayout>
+     
       <div style={styles.page}>
         <h2>📊 Student Dashboard</h2>
 
@@ -286,6 +286,7 @@ export default function Dashboard() {
         </div>
 
       </div>
+      </MainLayout>
     </>
   );
 }

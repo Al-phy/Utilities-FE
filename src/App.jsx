@@ -5,7 +5,7 @@ import Login from "./login.jsx";
 import Register from "./register.jsx";
 import StudentSummary from "./StudentTable.jsx";
 import Dashboard from "./Dashboard.jsx";
- 
+import Attendance from "./attendance/Attendance.jsx"
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
  
@@ -39,6 +39,7 @@ export default function App() {
         <Route path="/" element={<AuthPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/students" element={<StudentSummary />} />
+        <Route path="/attendance" element={<Attendance />}/>
       </Routes>
     </Router>
   );

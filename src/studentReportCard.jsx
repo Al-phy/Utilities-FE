@@ -6,7 +6,7 @@ import HighchartsReact from "highcharts-react-official";
 import HighchartsReactImport from "highcharts-react-official";
 import { MdEdit } from "react-icons/md";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://localhost:4000";
 
 export default function StudentReportCard() {
   const { admission_no } = useParams();
