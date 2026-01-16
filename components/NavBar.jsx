@@ -27,13 +27,6 @@ export default function Navbar({ onToggle }) {
 
         {/* ACTIONS */}
         <div className="navbar-actions">
-          <button
-            className="nav-btn"
-            style={{ backgroundColor: "#690669", color: "white" }}
-            onClick={() => navigate("/attendance")}
-          >
-            Go to Attendance
-          </button>
 
           <button
             className="nav-btn"

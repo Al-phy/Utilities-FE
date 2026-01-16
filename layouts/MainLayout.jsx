@@ -17,7 +17,7 @@ export default function MainLayout({ children }) {
       {/* SIDEBAR */}
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
         <div className="sidebar-header">
-          <span className="logo">SCHOOL</span>
+          <span className="logo">SCHOOL MANAGEMENT SYSTEM</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -35,6 +35,10 @@ export default function MainLayout({ children }) {
             <FiClipboard />
             <span>Marks</span>
           </NavLink>
+          <NavLink to="/attendance"className="nav-link">
+           <FiClipboard />
+           <span>Attendance</span>
+           </NavLink>
         </nav>
       </aside>
 
