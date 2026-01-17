@@ -1,0 +1,317 @@
+/* =====================================================
+   PAGE LAYOUT
+===================================================== */
+
+.page-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  padding: 40px 60px;
+  background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c2f4a;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, #c7d2fe, #e0e7ff);
+  margin: 30px 0;
+}
+
+/* =====================================================
+   FORM CONTAINER
+===================================================== */
+
+form {
+  width: 100%;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+form h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4338ca;
+  margin-bottom: 20px;
+}
+
+/* =====================================================
+   FORM GRID & GROUPS
+===================================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.form-group,
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label,
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* =====================================================
+   INPUTS & SELECTS
+===================================================== */
+
+.input-group input,
+.input-group select,
+.form-group select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* =====================================================
+   TEACHER SECTION
+===================================================== */
+
+.teacher-section {
+  margin-top: 40px;
+  padding: 28px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.teacher-section h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3730a3;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
+  transition: all 0.25s ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(99, 102, 241, 0.55);
+}
+
+button[type="submit"] {
+  margin-top: 40px;
+  padding: 14px 30px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #4338ca, #6366f1);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(67, 56, 202, 0.4);
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(67, 56, 202, 0.6);
+}
+
+/* =====================================================
+   CHECKBOXES
+===================================================== */
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.checkbox-group.inline {
+  gap: 12px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.checkbox-item input {
+  accent-color: #6366f1;
+}
+
+.checkbox-item:hover {
+  background: #e0e7ff;
+  border-color: #c7d2fe;
+}
+
+/* =====================================================
+   ENDORSEMENT ROW
+===================================================== */
+
+.endorsement-row {
+  position: relative;
+  margin-top: 22px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
+  gap: 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f9fafb, #ffffff);
+  box-shadow: inset 0 0 0 1px #e5e7eb;
+  transition: all 0.25s ease;
+}
+
+.endorsement-row:hover {
+  box-shadow: inset 0 0 0 1px #c7d2fe,
+              0 8px 22px rgba(99, 102, 241, 0.15);
+}
+
+.endorsement-row select {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.endorsement-row select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Remove endorsement button */
+.remove-btn {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.45);
+  transition: all 0.25s ease;
+}
+
+.remove-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 28px rgba(220, 38, 38, 0.65);
+}
+
+/* =====================================================
+   MESSAGES
+===================================================== */
+
+.message {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.message.success {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.message.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .endorsement-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-wrapper {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

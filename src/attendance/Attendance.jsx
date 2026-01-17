@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import MainLayout from "../layouts/MainLayout";
 const API = "http://localhost:4000";
 
 export default function Attendance() {
@@ -187,6 +187,7 @@ const [hideUpdateSuccess, setHideUpdateSuccess] = useState(false);
 
 
   return (
+    <MainLayout>
     <div style={styles.page}>
       {/*CONFIRMATION POPUP FOR SAVE */}
       {showConfirm && (
@@ -477,6 +478,7 @@ const [hideUpdateSuccess, setHideUpdateSuccess] = useState(false);
 
       </div>
     </div >
+    </MainLayout>
   );
 }
 
