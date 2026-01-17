@@ -38,12 +38,14 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        
         <Route path="/" element={<AuthPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/students" element={<StudentSummary />} />
-        <Route path="/students" element={<ExamMarkEntriesPage />} />
+        {/* <Route path="/students" element={<StudentSummary />} /> */}
+       
         <Route path="/attendance" element={<Attendance />}/>
-        <Route path="/exam-mark-entries" element={< StudentListPage/>} />
+        <Route path="/exam-mark-entries" element={< ExamMarkEntriesPage/>} />
+        <Route path="/studentss" element={<StudentListPage />} />
       </Routes>
     </Router>
   );

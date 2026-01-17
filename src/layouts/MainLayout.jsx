@@ -11,6 +11,7 @@ import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
+  
 
   return (
     <div className="layout">
@@ -21,19 +22,19 @@ export default function MainLayout({ children }) {
         </div>
 
         <nav className="sidebar-nav">
-          <NavLink to="/reports" className="nav-link">
+          <NavLink to="/dashboard" className="nav-link">
             <FiBarChart2 />
-            <span>Reports</span>
+            <span>Dashboard</span>
           </NavLink>
 
-          <NavLink to="/students" className="nav-link">
+          <NavLink to="/studentss" className="nav-link">
             <FiUsers />
-            <span>Students</span>
+            <span>Students Mark Entry</span>
           </NavLink>
 
           <NavLink to="/exam-mark-entries" className="nav-link">
             <FiClipboard />
-            <span>Marks</span>
+            <span>Exam Marks view/edit</span>
           </NavLink>
           <NavLink to="/attendance"className="nav-link">
            <FiClipboard />

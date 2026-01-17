@@ -114,7 +114,7 @@ export default function ExamMarkEntriesPage() {
                             <button
                                 className="btn btn-outline"
                                 onClick={() =>
-                                    navigate("/students", {
+                                    navigate("/studentss", {
                                         state: {
                                             entryId: selected.id,
                                             mode: "view",
@@ -129,7 +129,7 @@ export default function ExamMarkEntriesPage() {
                             <button
                                 className="btn btn-primary"
                                 onClick={() =>
-                                    navigate("/students", {
+                                    navigate("/studentss", {
                                         state: {
                                             entryId: selected.id,
                                             mode: "edit",
