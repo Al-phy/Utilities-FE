@@ -1,13 +1,13 @@
 
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./login.jsx";
-import Register from "./register.jsx";
-import StudentSummary from "./StudentTable.jsx";
-import Dashboard from "./Dashboard.jsx";
+import Login from "./pages/auth/login.jsx";
+import Register from "./pages/auth/register.jsx";
+import StudentSummary from "./pages/students/StudentTable.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Attendance from "./attendance/Attendance.jsx"
-import StudentListPage from "./studentMarkEntrypage.jsx";
-import ExamMarkEntriesPage from "./examMarkEntriesPage.jsx";
+import StudentListPage from "./pages/students/studentMarkEntrypage.jsx";
+import ExamMarkEntriesPage from "./pages/students/examMarkEntriesPage.jsx";
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
  
@@ -40,6 +40,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<AuthPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/students" element={<StudentSummary />} />
         <Route path="/students" element={<ExamMarkEntriesPage />} />
         <Route path="/attendance" element={<Attendance />}/>
         <Route path="/exam-mark-entries" element={< StudentListPage/>} />

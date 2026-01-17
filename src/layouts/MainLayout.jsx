@@ -1,88 +1,55 @@
-// MainLayout.jsx
-import React from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import Navbar from "../components/NavBar.jsx";
+import {
+  FiMenu,
+  FiBarChart2,
+  FiUsers,
+  FiClipboard
+} from "react-icons/fi";
+import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  let heading = "";
-
-  if (location.pathname === "/reports") {
-    heading = "Student Performance Dashboard";
-  }
-
-  if (location.pathname === "/students") {
-    const mode =
-      location.state?.mode ||
-      location.state?.viewMode ||
-      "create";
-
-    if (mode === "view") heading = "Students Mark - View Only";
-    else if (mode === "edit") heading = "Students Mark - Edit Mode";
-    else heading = "Students Mark - Create";
-  }
-
-  if (location.pathname === "/exam-mark-entries") {
-    heading = "Exam Mark Entries";
-  }
-
-  function handleLogout() {
-    navigate("/");
-  }
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="layout">
       {/* SIDEBAR */}
-      <aside className="w-64 bg-[#0b1c2d] flex flex-col">
-        <div className="px-6 py-5 text-xl font-bold text-white border-b border-white/10">
-          SCHOOL APP
+      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+        <div className="sidebar-header">
+          <span className="logo">SCHOOL MANAGEMENT SYSTEM</span>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {[
-            { to: "/reports", label: "Reports" },
-            { to: "/students", label: "Students" },
-            { to: "/exam-mark-entries", label: "Exam Mark Entries" },
-          ].map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `block px-4 py-2 text-sm font-medium rounded-md transition
-                ${
-                  isActive
-                    ? "bg-[#102a43] text-white"
-                    : "text-gray-200 hover:bg-[#081626]"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+        <nav className="sidebar-nav">
+          <NavLink to="/reports" className="nav-link">
+            <FiBarChart2 />
+            <span>Reports</span>
+          </NavLink>
+
+          <NavLink to="/students" className="nav-link">
+            <FiUsers />
+            <span>Students</span>
+          </NavLink>
+
+          <NavLink to="/exam-mark-entries" className="nav-link">
+            <FiClipboard />
+            <span>Marks</span>
+          </NavLink>
+          <NavLink to="/attendance"className="nav-link">
+           <FiClipboard />
+           <span>Attendance</span>
+           </NavLink>
         </nav>
       </aside>
 
       {/* MAIN */}
-      <div className="flex-1 flex flex-col">
-        {/* TOP HEADER */}
-        <header className="h-16 bg-white flex items-center justify-between px-7 border-b border-gray-200 shadow-sm">
-          <h1 className="text-lg font-semibold text-gray-800">
-            {heading}
-          </h1>
+      <div className="main">
+        <Navbar
+          onToggle={() => setCollapsed(!collapsed)}
+          collapsed={collapsed}
+        />
 
-          {/* LOGOUT (UNCHANGED) */}
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg transition
-            hover:-translate-y-1 hover:scale-105 hover:bg-red-700 font-bold"
-          >
-            Logout
-          </button>
-        </header>
-
-        {/* PAGE CONTENT */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="page-content">{children}</main>
       </div>
     </div>
   );
