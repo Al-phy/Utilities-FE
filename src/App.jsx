@@ -8,6 +8,10 @@ import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Attendance from "./attendance/Attendance.jsx"
 import StudentListPage from "./pages/students/studentMarkEntrypage.jsx";
 import ExamMarkEntriesPage from "./pages/students/examMarkEntriesPage.jsx";
+import UserCreate from "./UserRegistration/UserCreate.jsx";
+import StudentReportCard from "./studentReportCard.jsx";
+import ReportCardGenerator from "./reportCardGenerator.jsx";
+import MainLayout from "./layouts/MainLayout.jsx";
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
  
@@ -43,8 +47,11 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
        {/* <Route path="/students" element={<StudentSummary />} />  */}
         <Route path="/attendance" element={<Attendance />}/>
-        <Route path="/exam-mark-entries" element={< ExamMarkEntriesPage/>} />
-         <Route path="/studentss" element={< StudentListPage/>} />
+        <Route path="/reports/report-card" element={<ReportCardGenerator />} />
+        <Route path="/reports/report-card/:admission_no" element={<StudentReportCard />} />
+        <Route path="/exam-mark-entries" element={< ExamMarkEntriesPage/> } />       
+        <Route path="/studentss" element={<StudentListPage />} />
+        <Route path="/user-create" element={<UserCreate/>} />
       </Routes>
     </Router>
   );

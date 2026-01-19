@@ -40,8 +40,12 @@ export default function MainLayout({ children }) {
            <FiClipboard />
            <span>Attendance</span>
            </NavLink>
-           <NavLink to="/user-create"className="nav-link">
-           <FiUsers/>
+           <NavLink to="/reports/report-card" className="nav-link">
+            <FiBarChart2 />
+            <span>Reports</span>
+          </NavLink>
+          <NavLink to="/user-create"className="nav-link">
+           <FiUsers />
            <span>User Registration</span>
            </NavLink>
         </nav>
