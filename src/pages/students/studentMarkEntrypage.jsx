@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import API from "../../api";
+import MainLayout from "../../layouts/MainLayout";
 import maleAvatar from "../../assets/dummymale.png";
 import femaleAvatar from "../../assets/dummyfemale.png";
-
+import { 
+  PlusCircle, 
+  Save, 
+  Edit, 
+  CheckCircle, 
+  XCircle, 
+  Users, 
+  BookOpen, 
+  Calendar,
+  Award,
+  Filter,
+  UserPlus,
+  AlertTriangle
+} from "lucide-react";
 
 export default function StudentListPage() {
   const navigate = useNavigate();
@@ -12,9 +26,8 @@ export default function StudentListPage() {
   /* ================= MODE ================= */
   const [mode, setMode] = useState("create");
   const [entryId, setEntryId] = useState(null);
-
   const [showAddStudent, setShowAddStudent] = useState(false);
-
+  
   const [newStudent, setNewStudent] = useState({
     admission_no: "",
     name: "",
@@ -27,16 +40,12 @@ export default function StudentListPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmType, setConfirmType] = useState(""); // "create" | "edit"
 
-
   /* ================= DATA ================= */
   const [classes, setClasses] = useState([]);
   const [divisions, setDivisions] = useState([]);
   const [students, setStudents] = useState([]);
   const [errors, setErrors] = useState({});
-
   const [warning, setWarning] = useState("");
-
-
 
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -100,8 +109,7 @@ export default function StudentListPage() {
       setMarks(m);
       setAbsentMap(a);
     });
-  }, [entryId, students, term]); // 👈 term added
-
+  }, [entryId, students, term]);
 
   /* ================= VIEW / EDIT ================= */
   useEffect(() => {
@@ -180,7 +188,6 @@ export default function StudentListPage() {
     }
   }
 
-
   async function handleUpdate() {
     if (!entryId) {
       alert("No exam entry selected");
@@ -202,7 +209,7 @@ export default function StudentListPage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; // ❌ STOP API CALL
+      return;
     }
 
     setErrors({});
@@ -216,7 +223,7 @@ export default function StudentListPage() {
           ? null
           : marks[s.admission_no] === "" || marks[s.admission_no] == null
             ? undefined
-            : Number(marks[s.admission_no]), // ✅ "0" → 0
+            : Number(marks[s.admission_no]),
         is_absent: absentMap[s.admission_no] === true,
       })),
     };
@@ -228,7 +235,7 @@ export default function StudentListPage() {
   }
 
   function openConfirm(type) {
-    setConfirmType(type); // "create" or "edit"
+    setConfirmType(type);
     setShowConfirm(true);
   }
 
@@ -239,11 +246,11 @@ export default function StudentListPage() {
 
   async function confirmAction() {
     if (confirmType === "create") {
-      await handleSubmit(); // your existing submit function
+      await handleSubmit();
     }
 
     if (confirmType === "edit") {
-      await handleUpdate(); // your existing update function
+      await handleUpdate();
     }
 
     closeConfirm();
@@ -270,7 +277,6 @@ export default function StudentListPage() {
 
     await API.post("/students", newStudent);
 
-    // reload students list
     const res = await API.get("/students/students", {
       params: {
         class: selectedClass,
@@ -279,7 +285,6 @@ export default function StudentListPage() {
     });
     setStudents(res.data || []);
 
-    // close modal & reset
     setShowAddStudent(false);
     setNewStudent({
       admission_no: "",
@@ -292,264 +297,514 @@ export default function StudentListPage() {
   }
 
   function isValidAcademicYear(value) {
-    // Matches 4 digits, dash, 2 digits: 2024-25 ✅
     const regex = /^\d{4}-\d{2}$/;
     return regex.test(value);
   }
 
-
-
-
-
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-slate-100">
+    <MainLayout>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      
       {/* HEADER */}
+      <div className="bg-gradient-to-r from-purple-700 to-indigo-700 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <BookOpen className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  {mode === "view" ? "View Exam Marks" : 
+                   mode === "edit" ? "Edit Exam Marks" : "Enter Exam Marks"}
+                </h1>
+                <p className="text-purple-200 text-sm">
+                  Manage student marks and exam records
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                <Users className="w-5 h-5 text-white" />
+                <span className="text-white font-medium">
+                  {students.length} Students
+                </span>
+              </div>
+              
+              {mode === "create" && (
+                <button
+                  onClick={openAddStudent}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  <span className="font-medium">Add Student</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {/* CONTENT */}
-      <main className="pt-6 max-w-7xl mx-auto px-6">
+      {/* MAIN CONTENT */}
+      <main className="pt-6 max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+        {/* WARNING MESSAGE */}
+        {warning && (
+          <div className="mb-6 animate-slide-in">
+            <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl shadow-sm">
+              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              <p className="text-sm font-medium">{warning}</p>
+            </div>
+          </div>
+        )}
 
-        {/* FILTERS */}
-        <div className="bg-white rounded-2xl shadow p-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          <input className="input" value={schoolName} onChange={e => setSchoolName(e.target.value)} />
-          <input
-            className="input"
-            value={academicYear}
-            onChange={e => {
-              const val = e.target.value;
+        {/* FILTERS CARD */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Filter className="w-5 h-5 text-purple-600" />
+            <h2 className="text-lg font-semibold text-gray-800">Exam Details</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                School Name
+              </label>
+              <div className="relative">
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  value={schoolName}
+                  onChange={e => setSchoolName(e.target.value)}
+                  placeholder="Enter school name"
+                />
+              </div>
+            </div>
 
-              // Only allow valid format
-              if (val === "" || isValidAcademicYear(val)) {
-                setAcademicYear(val);
-                setWarning(""); // clear warning if valid
-              } else {
-                setWarning("Academic Year must be in format YYYY-YY (e.g., 2024-25)");
-                setTimeout(() => setWarning(""), 3000);
-              }
-            }}
-          />
-          <input className="input" placeholder="Enter Exam Name" value={examName} onChange={e => setExamName(e.target.value)} />
-          <select className="input" value={selectedClass} onChange={e => setSelectedClass(e.target.value)}>
-            {classes.map(c => <option key={c}>{c}</option>)}
-          </select>
-          <select className="input" value={selectedDivision} onChange={e => setSelectedDivision(e.target.value)}>
-            {divisions.map(d => <option key={d}>{d}</option>)}
-          </select>
-          <select className="input" value={subject} onChange={e => setSubject(e.target.value)}>
-            {subjects.map(s => <option key={s}>{s}</option>)}
-          </select>
-          <input type="number" className="input" placeholder="Max" value={maxMark} onChange={e => setMaxMark(e.target.value)} />
-          <select
-            className="input"
-            value={term}
-            onChange={e => setTerm(e.target.value)}
-          >
-            {terms.map(t => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Academic Year
+              </label>
+              <div className="relative">
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  value={academicYear}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === "" || isValidAcademicYear(val)) {
+                      setAcademicYear(val);
+                      setWarning("");
+                    } else {
+                      setWarning("Academic Year must be in format YYYY-YY (e.g., 2024-25)");
+                      setTimeout(() => setWarning(""), 3000);
+                    }
+                  }}
+                  placeholder="2024-25"
+                />
+              </div>
+            </div>
 
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Exam Name
+              </label>
+              <div className="relative">
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  placeholder="Enter Exam Name"
+                  value={examName}
+                  onChange={e => setExamName(e.target.value)}
+                />
+              </div>
+            </div>
 
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Class
+              </label>
+              <select 
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition appearance-none"
+                value={selectedClass}
+                onChange={e => setSelectedClass(e.target.value)}
+              >
+                {classes.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Division
+              </label>
+              <select 
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition appearance-none"
+                value={selectedDivision}
+                onChange={e => setSelectedDivision(e.target.value)}
+              >
+                {divisions.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Subject
+              </label>
+              <select 
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition appearance-none"
+                value={subject}
+                onChange={e => setSubject(e.target.value)}
+              >
+                {subjects.map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Max Marks
+              </label>
+              <input
+                type="number"
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                placeholder="Max"
+                value={maxMark}
+                onChange={e => setMaxMark(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Term
+              </label>
+              <select 
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition appearance-none"
+                value={term}
+                onChange={e => setTerm(e.target.value)}
+              >
+                {terms.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
-        {/* STUDENTS GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {students.map(s => {
+        {/* STUDENTS SECTION */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Users className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-800">Students List</h2>
+                <p className="text-gray-500 text-sm">
+                  {selectedClass} - {selectedDivision}
+                </p>
+              </div>
+            </div>
+            
+            <div className="text-sm text-gray-500">
+              Total: <span className="font-semibold text-purple-600">{students.length}</span> students
+            </div>
+          </div>
 
-
-            return (
+          {/* STUDENTS GRID */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {students.map(s => (
               <div
                 key={s.admission_no}
-                className="bg-white rounded-2xl shadow hover:shadow-xl transition p-5 flex justify-between items-center"
+                className={`bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-5 border ${
+                  absentMap[s.admission_no] 
+                    ? 'border-amber-200 bg-amber-50' 
+                    : 'border-gray-100 hover:border-purple-200'
+                }`}
               >
-                <div className="flex-1">
-                  <div className="text-base font-semibold text-slate-800">
-                    {s.student_name}
-                  </div>
-                  <div className="text-sm text-slate-500">
-                    {s.admission_no}
-                  </div>
-
-                  {!absentMap[s.admission_no] && (
-                    <>
-                      <input
-                        type="number"
-                        disabled={mode === "view"}
-                        value={marks[s.admission_no] ?? ""}
-                        onChange={e => {
-                          setMarks(p => ({ ...p, [s.admission_no]: e.target.value }));
-                          setErrors(p => ({ ...p, [s.admission_no]: null }));
-                        }}
-                        className="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-2 focus:ring-indigo-400 outline-none"
-                      />
-
-                      {errors[s.admission_no] && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors[s.admission_no]}
-                        </p>
-                      )}
-                    </>
-                  )}
-
-
-                  <label className="flex items-center gap-2 mt-3 text-sm">
-                    <input
-                      type="checkbox"
-                      disabled={mode === "view"}
-                      checked={!!absentMap[s.admission_no]}
-                      onChange={() => toggleAbsent(s.admission_no)}
+                <div className="flex items-start gap-4">
+                  {/* AVATAR */}
+                  <div className="relative">
+                    <img
+                      src={s.gender === "F" ? femaleAvatar : maleAvatar}
+                      alt="student"
+                      className="w-16 h-16 rounded-xl border-2 border-white shadow-sm object-cover"
                     />
-                    Absent
-                  </label>
+                    {absentMap[s.admission_no] && (
+                      <div className="absolute -top-1 -right-1 bg-amber-500 text-white text-xs px-2 py-1 rounded-full">
+                        Absent
+                      </div>
+                    )}
+                  </div>
+
+                  {/* STUDENT INFO */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-base font-bold text-purple-800 truncate">
+                          {s.student_name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          #{s.admission_no}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* MARKS INPUT */}
+                    {!absentMap[s.admission_no] && (
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Enter Marks
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            disabled={mode === "view"}
+                            value={marks[s.admission_no] ?? ""}
+                            onChange={e => {
+                              setMarks(p => ({ ...p, [s.admission_no]: e.target.value }));
+                              setErrors(p => ({ ...p, [s.admission_no]: null }));
+                            }}
+                            className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${
+                              errors[s.admission_no] 
+                                ? 'border-red-300 bg-red-50' 
+                                : 'border-gray-300'
+                            } ${mode === "view" ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                            placeholder={`Out of ${maxMark || 100}`}
+                          />
+                          {errors[s.admission_no] && (
+                            <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                              <XCircle className="w-3 h-3" />
+                              {errors[s.admission_no]}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ABSENT CHECKBOX */}
+                    <div className="mt-4">
+                      <label className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition cursor-pointer ${
+                        absentMap[s.admission_no] 
+                          ? 'bg-amber-100 text-amber-700' 
+                          : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      } ${mode === "view" ? 'cursor-not-allowed opacity-75' : ''}`}>
+                        <input
+                          type="checkbox"
+                          disabled={mode === "view"}
+                          checked={!!absentMap[s.admission_no]}
+                          onChange={() => toggleAbsent(s.admission_no)}
+                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        />
+                        <span className="text-sm font-medium">
+                          Mark as Absent
+                        </span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
-
-                {/* AVATAR */}
-                <img
-                  src={s.gender === "F" ? femaleAvatar : maleAvatar}
-                  alt="student"
-                  className="w-20 h-20 rounded-xl ml-4 bg-slate-100 object-contain"
-                />
-
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* ACTION */}
+        {/* ACTION BUTTONS */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-gray-500">
+              {mode === "create" && "Ready to submit marks for all students"}
+              {mode === "edit" && "Update marks for the selected exam"}
+              {mode === "view" && "View mode - No editing allowed"}
+            </div>
+            
+            <div className="flex gap-3">
+              {mode === "create" && (
+                <>
+                  <button
+                    onClick={openAddStudent}
+                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                    <span className="font-semibold">Add Student</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => openConfirm("create")}
+                    className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                  >
+                    <Save className="w-5 h-5" />
+                    <span className="font-semibold">Submit Marks</span>
+                  </button>
+                </>
+              )}
+              
+              {mode === "edit" && (
+                <button 
+                  onClick={() => openConfirm("edit")}
+                  className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                >
+                  <Edit className="w-5 h-5" />
+                  <span className="font-semibold">Update Marks</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
 
-        <div className="flex justify-end mt-10 gap-x-6">
-          {mode === "create" && (
-            <>
+      {/* CONFIRMATION MODAL */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md transform transition-all animate-scale-in">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                <CheckCircle className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                {confirmType === "create" 
+                  ? "Confirm Submission" 
+                  : "Confirm Update"}
+              </h3>
+              <p className="text-gray-600">
+                {confirmType === "create"
+                  ? "Are you sure you want to submit marks for all students?"
+                  : "Are you sure you want to update the marks for this exam?"}
+              </p>
+            </div>
+
+            <div className="flex gap-3">
               <button
-                onClick={openAddStudent}
-                className="px-8 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition"
+                onClick={closeConfirm}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmAction}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:shadow-lg transition font-medium"
+              >
+                {confirmType === "create" ? "Submit" : "Update"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ADD STUDENT MODAL */}
+      {showAddStudent && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg transform transition-all animate-scale-in">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <UserPlus className="w-6 h-6 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">Add New Student</h3>
+                <p className="text-gray-600 text-sm">
+                  Fill in the student details below
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Admission No *
+                </label>
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  placeholder="Enter admission number"
+                  value={newStudent.admission_no}
+                  onChange={(e) =>
+                    setNewStudent(p => ({ ...p, admission_no: e.target.value }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Name *
+                </label>
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  placeholder="Enter student name"
+                  value={newStudent.name}
+                  onChange={(e) =>
+                    setNewStudent(p => ({ ...p, name: e.target.value }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Gender
+                </label>
+                <select
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition"
+                  value={newStudent.gender}
+                  onChange={(e) =>
+                    setNewStudent(p => ({ ...p, gender: e.target.value }))
+                  }
+                >
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Class
+                </label>
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed"
+                  value={newStudent.class}
+                  readOnly
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Division
+                </label>
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed"
+                  value={newStudent.division}
+                  readOnly
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Academic Year
+                </label>
+                <input
+                  className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed"
+                  value={newStudent.academic_year}
+                  readOnly
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowAddStudent(false)}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddStudent}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl hover:shadow-lg transition font-medium"
               >
                 Add Student
               </button>
-
-
-              <button
-                onClick={() => openConfirm("create")}
-                className="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
-              >
-                Submit
-              </button>
-            </>
-          )}
-          {mode === "edit" && (
-            <button onClick={() => openConfirm("edit")}
-              className="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
-            >
-              Update
-            </button>
-          )}
-
-
-        </div>
-      </main>
-      {showConfirm && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-md">
-            <h2 className="text-lg font-semibold text-slate-800">
-              {confirmType === "create"
-                ? "Are You Sure to Submit Marks?"
-                : "Are You Sure to Update Marks?"}
-            </h2>
-
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                onClick={closeConfirm}
-                className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={confirmAction}
-                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-              >
-                OK
-              </button>
             </div>
           </div>
         </div>
       )}
-
-      {showAddStudent && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-md">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4">
-              Add New Student
-            </h2>
-
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                className="input"
-                placeholder="Admission No"
-                value={newStudent.admission_no}
-                onChange={(e) =>
-                  setNewStudent(p => ({ ...p, admission_no: e.target.value }))
-                }
-              />
-
-              <input
-                className="input"
-                placeholder="Name"
-                value={newStudent.name}
-                onChange={(e) =>
-                  setNewStudent(p => ({ ...p, name: e.target.value }))
-                }
-              />
-
-              <select
-                className="input"
-                value={newStudent.gender}
-                onChange={(e) =>
-                  setNewStudent(p => ({ ...p, gender: e.target.value }))
-                }
-              >
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-              </select>
-
-              <input className="input bg-slate-100 cursor-not-allowed" value={newStudent.class} disabled />
-              <input className="input bg-slate-100 cursor-not-allowed" value={newStudent.division} disabled />
-              <input className="input bg-slate-100 cursor-not-allowed" value={newStudent.academic_year} disabled />
-
-            </div>
-
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                onClick={() => setShowAddStudent(false)}
-                className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100"
-              >
-                Cancel
-              </button>
-
-              <button onClick={handleAddStudent}
-                className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {warning && (
-        <div className="fixed top-5 right-5 z-9999">
-          <div className="flex items-start gap-3 bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-xl shadow-lg max-w-sm animate-slide-in">
-            <span className="text-xl">⚠️</span>
-            <p className="text-sm font-medium leading-snug">
-              {warning}
-            </p>
-          </div>
-        </div>
-      )}
-
-
     </div>
+    </MainLayout>
   );
 }
