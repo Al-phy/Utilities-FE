@@ -316,10 +316,7 @@ const [hideUpdateSuccess, setHideUpdateSuccess] = useState(false);
 )}
 
 
-      {/* 🔙 BACK BUTTON */}
-      <button style={styles.backBtn} onClick={() => navigate("/dashboard")}>
-        ⬅
-      </button>
+      
 
       {/* 📋 MAIN CARD */}
       <div style={styles.card}>

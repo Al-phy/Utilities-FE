@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import StudentForm from "./StudentForm";
 import TeacherForm from "./TeacherForm";
 import "./userCreate.css";
+import MainLayout from "../layouts/MainLayout";
 
 export default function UserCreate() {
   const [role, setRole] = useState("");
@@ -19,6 +20,7 @@ export default function UserCreate() {
   };
 
   return (
+    <MainLayout>
     <div className="page-wrapper">
       <h1 className="page-title">{getTitle()}</h1>
       <p className="page-subtitle">{getSubtitle()}</p>
@@ -39,5 +41,6 @@ export default function UserCreate() {
       {role === "student" && <StudentForm />}
       {role === "teacher" && <TeacherForm />}
     </div>
+    </MainLayout>
   );
 }

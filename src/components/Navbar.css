@@ -181,3 +181,260 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
   transform: translateY(-1px);
 }
+/* PROFILE STYLES */
+.profile-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.profile-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.profile-btn .rotate {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+/* PROFILE DROPDOWN */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-info h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.role-badge.teacher {
+  background: rgba(67, 97, 238, 0.15);
+  color: #4361ee;
+}
+
+.role-badge.student {
+  background: rgba(76, 201, 240, 0.15);
+  color: #4cc9f0;
+}
+
+/* PROFILE DETAILS */
+.profile-details {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.detail-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: #4361ee;
+  flex-shrink: 0;
+}
+
+.detail-content h4 {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-content p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212529;
+}
+
+/* SUBJECT TAGS */
+.subject-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.subject-tag {
+  background: rgba(247, 37, 133, 0.1);
+  color: #f72585;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* SWITCH ROLE BUTTON */
+.switch-role-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.switch-role-btn:hover {
+  opacity: 0.9;
+}
+
+/* PROFILE FOOTER */
+.profile-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.profile-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.profile-logout-btn:hover {
+  opacity: 0.9;
+}
+
+/* LOGOUT BUTTON STYLES */
+.logout-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+/* RESPONSIVE STYLES */
+@media (max-width: 768px) {
+  .profile-dropdown {
+    position: fixed;
+    top: 70px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+  }
+  
+  .profile-btn span {
+    display: none;
+  }
+  
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+  }
+}
